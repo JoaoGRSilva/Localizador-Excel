@@ -3,7 +3,7 @@ import pandas as pd
 import openpyxl
 
 # Carrega o arquivo Excel
-df = pd.read_excel(r'C:\Users\joao_silva\Desktop\HTML TESTE\RFV - CR - Copia.xlsx', engine='openpyxl')
+df = pd.read_excel(r'C:\Users\joao_silva\Desktop\HTML TESTE\dados.xlsx', engine='openpyxl')
 
 sg.theme('LightGreen2')
 
