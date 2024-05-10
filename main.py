@@ -1,89 +1,101 @@
-import PySimpleGUI as sg
+import sys
+from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QTextEdit
 import pandas as pd
 import openpyxl
 
-# Carrega o arquivo Excel
-df = pd.read_excel(r'C:\Users\joao_silva\Desktop\HTML TESTE\dados.xlsx', engine='openpyxl')
+df = pd.read_excel(r'C:\Users\joaog\OneDrive\Área de Trabalho\maas\dados.xlsx', engine='openpyxl')
 
-sg.theme('LightGreen2')
 
-layout = [
-    [[sg.Text('Digite o CPF:'), sg.InputText(key='-CPF-')], [sg.Button('Pesquisar'), sg.Button('Atualizar Tabela')]],
-    [sg.Text('', key='-OFERTA-', size=(50, 3), text_color='#000000', justification="center")]
-]
 
-# Cria a janela
-window = sg.Window('Pesquisa de CPF', layout)
+class PesquisaCPF(QWidget):
+    def __init__(self):
+        super().__init__()
 
-def atualizar_tabela():
-    global df
-    df = pd.read_excel('dados.xlsx', engine='openpyxl')
+        self.setWindowTitle('Retenção 5D')
+        self.setGeometry(100, 100, 400, 200)
+        self.setStyleSheet("background-color: #D3FF00")
 
-# Loop de eventos para processar eventos e obter valores
-while True:
-    event, values = window.read()
+        self.label_cpf = QLabel('Digite o CPF:')
+        self.input_cpf = QLineEdit()
+        self.button_pesquisar = QPushButton('Pesquisar')
+        self.button_limpar = QPushButton('Limpar')
+        self.label_oferta = QTextEdit()
+        self.label_oferta.setReadOnly(True)
+        self.input_cpf.setStyleSheet("background-color: #00C6CC; border-radius: 10px; ")
+        self.button_pesquisar.setStyleSheet("background-color: #00C6CC; border-radius: 10px; ")
+        self.button_limpar.setStyleSheet("background-color: #00C6CC; border-radius: 10px; ")
+        self.label_oferta.setStyleSheet("background-color: #00C6CC; border-radius: 10px; ")
 
-    if event == sg.WIN_CLOSED:
-        break
+        layout = QVBoxLayout()
+        layout.addWidget(self.label_cpf)
+        layout.addWidget(self.input_cpf)
 
-    elif event == 'Atualizar Tabela':
-        atualizar_tabela()
-        window['-OFERTA-'].update('Tabela atualizada com sucesso!')
+        h_layout = QHBoxLayout()
+        h_layout.addWidget(self.button_pesquisar)
+        h_layout.addWidget(self.button_limpar)
+        layout.addLayout(h_layout)
 
-    elif event == 'Pesquisar':
+        layout.addWidget(self.label_oferta)
+
+        self.setLayout(layout)
+
+        self.button_pesquisar.clicked.connect(self.pesquisar)
+        self.button_limpar.clicked.connect(self.limpar)
+
+        self.df = pd.DataFrame()
+
+    def pesquisar(self):
+        cpf = self.input_cpf.text()
         if df.empty:
-            window['-OFERTA-'].update('Arquivo Excel vazio ou não carregado corretamente.')
-            continue
-
+            self.label_oferta.setText("Arquivo Excel vazio ou não carregado corretamente.")
+            
         try:
-            cpf = int(values['-CPF-'])
+            cpf = int(cpf)
         except ValueError:
-            window['-OFERTA-'].update('Digite um CPF válido (apenas números).')
-            continue
+            self.label_oferta.setText("CPF não é válido, por favor tente apenas números.")
 
-        # Verifica se a coluna 'CPF' existe no DataFrame
-        if 'CPF' not in df.columns:
-            window['-OFERTA-'].update('A coluna "CPF" não existe no arquivo Excel.')
-            continue
+        if 'cpf' not in df.columns:
+            self.label_oferta.setText("Coluna CPF não encontrada!")
 
-        # Verifica se a coluna 'fx_score' existe no DataFrame
         if 'fx_score' not in df.columns:
-            window['-OFERTA-'].update('A coluna "fx_score" não existe no arquivo Excel.')
-            continue
+            self.label_oferta.setText("Coluna FX_SCORE não encontrada!")
 
-        # Verifica se o CPF existe na coluna 'CPF'
-        if cpf in df['CPF'].values:
-            # Exibe os dados do CPF encontrado
-            dados_cpf = df[df['CPF'] == cpf]
-            
-            # Obtém o valor da coluna 'fx_score' para o CPF encontrado
-            fx_score = dados_cpf['fx_score'].values[0]
-            
+        if cpf in df['cpf'].values:
+            linha_cpf = df[df['cpf'] == cpf]
+
+            fx_score = linha_cpf['fx_score'].values[0]
+
             if fx_score == "00 - CONTA NOVA":
-                window['-OFERTA-'].update('Cliente com conta nova, sem ofertas!')
-                window['-OFERTA-'].update(text_color='#000000')
-                window['-OFERTA-'].update(background_color='#f8f8ff')
-            elif fx_score == "02 - AMARELO":
-                window['-OFERTA-'].update('Cliente com pontuação mediana, oferte de até 50%!')
-                window['-OFERTA-'].update(text_color='#000000')
-                window['-OFERTA-'].update(background_color='#faf7a9')
-            elif fx_score == "581 - VERMELHO":
-                window['-OFERTA-'].update('Cliente com uma baixa pontuação, oferta de até 25%!')
-                window['-OFERTA-'].update(text_color='#000000')
-                window['-OFERTA-'].update(background_color='#f8f8ff')
-            elif fx_score == "03 - VERDE":
-                window['-OFERTA-'].update('Cliente com uma boa pontuação, oferta de até 100%!')
-                window['-OFERTA-'].update(text_color='#000000')
-                window['-OFERTA-'].update(background_color='#cfe0bc')
-            else:
-                window['-OFERTA-'].update('Cliente não tem oferta disponível.')
-                window['-OFERTA-'].update(text_color='#000000')
-        else:
-            window['-OFERTA-'].update('Cliente não localizado!')
-            window['-OFERTA-'].update(text_color='#000000')
-            window['-OFERTA-'].update(background_color='#ffffff')
-    else:
-        window['-OFERTA-'].update('')
+                self.label_oferta.setText("Cliente com conta nova, sem ofertas!")
+                self.label_oferta.setStyleSheet("background-color: #f8f8ff; border-radius: 10px; ")
+            
+            elif fx_score == "01 - VERMELHO":
+                self.label_oferta.setText("Cliente com uma baixa pontuação, oferta de até 25%!")
+                self.label_oferta.setStyleSheet("background-color: #ff6961; border-radius: 10px; ")
 
-# Fecha a janela
-window.close()
+            elif fx_score == "02 - AMARELO":
+                self.label_oferta.setText("Cliente com pontuação mediana, oferta de até 50%!")
+                self.label_oferta.setStyleSheet("background-color: #faf7a9; border-radius: 10px; ")
+
+            elif fx_score == "03 - VERDE":
+                self.label_oferta.setText("Cliente com uma boa pontuação, oferta de até 100%!")
+                self.label_oferta.setStyleSheet("background-color: #cfe0bc; border-radius: 10px; ")
+
+            else:
+                self.label_oferta.setText("Oferta não localizada.")
+
+        else:
+            self.label_oferta.setText("Cliente não localizado!")
+            self.label_oferta.setStyleSheet("background-color: #ffffff; border-radius: 10px; ")
+
+    def limpar(self):
+        self.input_cpf.setText("")
+        self.label_oferta.setText(" ")
+        self.label_oferta.setStyleSheet("background-color: #00C6CC; border-radius: 10px; ")
+
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    window = PesquisaCPF()
+    window.show()
+    sys.exit(app.exec())
