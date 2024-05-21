@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButto
 import pandas as pd
 import openpyxl
 
-df = pd.read_excel(r'C:\Users\joaog\OneDrive\Área de Trabalho\maas\dados.xlsx', engine='openpyxl')
+df = pd.read_excel(r'\\fileserver-matriz\Files\Quartil - QIL\Quartil CR - QCR\Qualidade SSAP\Teste\dados.xlsx', engine='openpyxl')
 
 
 
