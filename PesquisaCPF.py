@@ -5,41 +5,36 @@ df = pd.read_excel('dados.xlsx', engine='openpyxl')
 def search_logic(cpf, label_oferta):
     if df.empty:
         label_oferta.setText("Arquivo Excel vazio ou não carregado corretamente.")
-        
+        return
+    
+    required_columns = ['cpf', 'fx_score']
+    for column in required_columns:
+        if column not in df.columns:
+            label_oferta.setText(f"Coluna {column.upper()} não foi encontrada!")
+            return
+
     try:
         cpf = int(cpf)
     except ValueError:
         label_oferta.setText("CPF não é válido, por favor tente apenas números.")
-
-    if 'cpf' not in df.columns:
-        label_oferta.setText("Coluna CPF não encontrada!")
-
-    if 'fx_score' not in df.columns:
-        label_oferta.setText("Coluna FX_SCORE não encontrada!")
-
+        return
+    
     if cpf in df['cpf'].values:
         linha_cpf = df[df['cpf'] == cpf]
-
         fx_score = linha_cpf['fx_score'].values[0]
 
-        if fx_score == "00 - CONTA NOVA":
-            label_oferta.setText("Cliente com conta nova, sem ofertas!")
-            label_oferta.setStyleSheet("background-color: #f8f8ff; border-radius: 10px; ")
-        
-        elif fx_score == "01 - VERMELHO":
-            label_oferta.setText("Cliente com uma baixa pontuação, oferta de até 25%!")
-            label_oferta.setStyleSheet("background-color: #ff6961; border-radius: 10px; ")
+        # Dicionário para mensagens e estilos
+        offer_messages = {
+            "00 - CONTA NOVA": ("Cliente com conta nova, sem ofertas!", "#f8f8ff"),
+            "01 - VERMELHO": ("Cliente com uma baixa pontuação, oferta de até 25%!", "#ff6961"),
+            "02 - AMARELO": ("Cliente com pontuação mediana, oferta de até 50%!", "#faf7a9"),
+            "03 - VERDE": ("Cliente com uma boa pontuação, oferta de até 100%!", "#cfe0bc"),
+        }
 
-        elif fx_score == "02 - AMARELO":
-            label_oferta.setText("Cliente com pontuação mediana, oferta de até 50%!")
-            label_oferta.setStyleSheet("background-color: #faf7a9; border-radius: 10px; ")
-
-        elif fx_score == "03 - VERDE":
-            label_oferta.setText("Cliente com uma boa pontuação, oferta de até 100%!")
-            label_oferta.setStyleSheet("background-color: #cfe0bc; border-radius: 10px; ")
-
-        else:
-            label_oferta.setText("Oferta não localizada.")
+        # Definir mensagem e estilo com base no fx_score
+        message, color = offer_messages.get(fx_score, ("Oferta não localizada.", "#f8f8ff"))
+        label_oferta.setText(message)
+        label_oferta.setStyleSheet(f"background-color: {color}; border-radius: 10px; ")
 
     else:
         label_oferta.setText("Cliente não localizado!")
