@@ -75,7 +75,7 @@ Após desbloquear o botão, selecione o arquivo Excel com os dados atualizados e
 
 ---
 
-###🚀 Tecnologias Utilizadas
+### 🚀 Tecnologias Utilizadas
 PyQt5: Para a interface gráfica do usuário (GUI).
 Pandas: Para manipulação de dados e leitura/escrita do arquivo Parquet.
 Excel (XLSX): Formato de arquivo usado para importar dados atualizados.
