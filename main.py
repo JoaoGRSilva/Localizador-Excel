@@ -2,6 +2,7 @@ import sys
 from PyQt5.QtWidgets import QApplication
 from gui import PesquisaCPF
 from PesquisaCPF import search_logic, clear_logic, df
+from PyQt5.QtGui import QIcon
 
 
 def update_logic(file_name):
@@ -33,6 +34,7 @@ def update_logic(file_name):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
+    app.setWindowIcon(QIcon('icon.ico'))
     window = PesquisaCPF(search_logic, clear_logic, update_logic)
     window.show()
     sys.exit(app.exec())

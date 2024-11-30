@@ -7,6 +7,6 @@ PyInstaller.__main__.run([
     '--noconsole',  # não mostrar console ao executar
     '--add-data', 'dados.parquet;.',  # incluir arquivo de dados
     '--icon=icon.ico',  # se você tiver um ícone
-    '--name=Retençaõ 5D',  # nome do executável
+    '--name=Retenção 5D',  # nome do executável
     '--windowed',  # aplicação com interface gráfica
 ])

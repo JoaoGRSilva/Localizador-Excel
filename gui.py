@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import (QWidget, QLabel, QLineEdit, QPushButton, 
                            QVBoxLayout, QHBoxLayout, QTextEdit, QFileDialog, QMessageBox)
 from PyQt5.QtGui import QFont
+from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
 
 class PesquisaCPF(QWidget):
@@ -9,6 +10,8 @@ class PesquisaCPF(QWidget):
 
         self.secret_code = "att5d"  # Código secreto para ativar o botão
         self.current_input = ""  # Armazena as teclas digitadas
+        
+        self.setWindowIcon(QIcon("icon.ico"))
         
         self.setWindowTitle('Retenção 5D')
         self.setGeometry(100, 100, 400, 200)
