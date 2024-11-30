@@ -35,7 +35,7 @@
 ### **Instalação das dependências**
 1. Clone o repositório:
    ```bash
-   git clone https://github.com/usuario/repositorio.git
+   git clone https://github.com/JoaoGRSilva/Localizador-Excel.git
 Navegue até a pasta do projeto:
 
 bash
