@@ -70,25 +70,25 @@ Após desbloquear o botão, selecione o arquivo Excel com os dados atualizados e
 
 ---
 
-⚙️ Como funciona o banco de dados?
+### ⚙️ Como funciona o banco de dados?
 -O banco de dados é carregado no formato Parquet, o que permite uma leitura mais rápida e eficiente. Caso o arquivo dados.parquet não esteja disponível ou precise ser atualizado, o aplicativo permite importar dados de um arquivo Excel para gerar o banco de dados novamente.
 
 ---
 
-🚀 Tecnologias Utilizadas
+###🚀 Tecnologias Utilizadas
 PyQt5: Para a interface gráfica do usuário (GUI).
 Pandas: Para manipulação de dados e leitura/escrita do arquivo Parquet.
 Excel (XLSX): Formato de arquivo usado para importar dados atualizados.
 
 ---
 
-🐞 Problemas conhecidos
--A primeira vez que você abrir o aplicativo e não tiver um arquivo dados.parquet, ele tentará carregar um banco de dados vazio. Certifique-se de rodar a atualização da base de dados se necessário.
+### 🐞 Problemas conhecidos
+- A primeira vez que você abrir o aplicativo e não tiver um arquivo dados.parquet, ele tentará carregar um banco de dados vazio. Certifique-se de rodar a atualização da base de dados se necessário.
 
 ---
 
-🤝 Contribuindo
--Contribuições são bem-vindas! Se você tiver melhorias, correções de bugs ou novas funcionalidades, sinta-se à vontade para abrir uma issue ou enviar um pull request.
+### 🤝 Contribuindo
+- Contribuições são bem-vindas! Se você tiver melhorias, correções de bugs ou novas funcionalidades, sinta-se à vontade para abrir uma issue ou enviar um pull request.
 
 Faça um fork deste repositório.
 Crie uma nova branch (git checkout -b feature-nome-da-sua-feature).
@@ -98,10 +98,10 @@ Abra um pull request explicando as mudanças realizadas.
 
 ---
 
-📃 Licença
--Este projeto está licenciado sob a MIT License - veja o arquivo LICENSE para mais detalhes.
+### 📃 Licença
+- Este projeto está licenciado sob a MIT License - veja o arquivo LICENSE para mais detalhes.
 
 ---
 
-👨‍💻 Autoria
--Desenvolvido por João Gabriel.
+### 👨‍💻 Autoria
+- Desenvolvido por João Gabriel.
