@@ -40,10 +40,10 @@ def search_logic(cpf, label_oferta):
         fx_score = linha_cpf['fx_score']
 
         offer_messages = {
-            "00 - CONTA NOVA": ("Cliente com conta nova, sem ofertas!", "#f8f8ff"),
-            "01 - VERMELHO": ("Cliente com uma baixa pontuação, oferta de até 25%!", "#ff6961"),
-            "02 - AMARELO": ("Cliente com pontuação mediana, oferta de até 50%!", "#faf7a9"),
-            "03 - VERDE": ("Cliente com uma boa pontuação, oferta de até 100%!", "#cfe0bc"),
+            "4 - MORTO": ("VERMELHO 25%", "#ff6961"),
+            "1 - VERMELHO": ("VERMELHO 25%", "#ff6961"),
+            "2 - AMARELO": ("AMARELO 50% A 75%", "#faf7a9"),
+            "3 - VERDE": ("VERDE 75% A 100%", "#cfe0bc"),
         }
 
         message, color = offer_messages.get(fx_score, ("Oferta não localizada.", "#f8f8ff"))
