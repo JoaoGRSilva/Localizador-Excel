@@ -3,7 +3,6 @@ import time
 from PySide6 import QtWidgets
 
 
-# Carrega os dados do Parquet
 print("Carregando dados...")
 start_time = time.time()
 try:
@@ -19,6 +18,7 @@ def search_logic(cpf, label_oferta, label_farm3m=None, label_total_valor=None):
     
     if df.empty:
         label_oferta.setText("Arquivo de dados vazio ou não carregado corretamente.")
+        label_oferta.setStyleSheet("background-color: #f8f8ff; border-radius: 10px; ")
         return
     
     required_columns = ['cpf', 'fx_score', 'desc_farmacia_ult3m', 'desc_farmacia_total']
@@ -52,23 +52,22 @@ def search_logic(cpf, label_oferta, label_farm3m=None, label_total_valor=None):
         label_oferta.setText(message)
         label_oferta.setStyleSheet(f"background-color: {color}; border-radius: 10px; ")
         
-        # Atualiza os campos de desconto de farmácia se fornecidos
         if label_farm3m is not None:
-            label_farm3m.setText(str(desc_farm_3m))
-            label_farm3m.setStyleSheet("background-color: #f8f8ff; border-radius: 10px;")
+            valor_formatado_3m = f"R$ {desc_farm_3m:.2f}".replace('.', ',')
+            label_farm3m.setText(valor_formatado_3m)
             
         if label_total_valor is not None:
-            label_total_valor.setText(str(desc_farm_total))
-            label_total_valor.setStyleSheet("background-color: #f8f8ff; border-radius: 10px;")
+            valor_formatado_total = f"R$ {desc_farm_total:.2f}".replace('.', ',')
+            label_total_valor.setText(valor_formatado_total)
     else:
         label_oferta.setText("Cliente não localizado!")
         label_oferta.setStyleSheet("background-color: #f8f8ff; border-radius: 10px; ")
         
-        # Limpa os campos de desconto se fornecidos
+
         if label_farm3m is not None:
-            label_farm3m.setText("")
+            label_farm3m.setText("R$ 0,00")
         if label_total_valor is not None:
-            label_total_valor.setText("")
+            label_total_valor.setText("R$ 0,00")
 
 
 def clear_logic(input_cpf, label_oferta):

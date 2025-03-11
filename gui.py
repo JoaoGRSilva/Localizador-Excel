@@ -1,7 +1,7 @@
 from PySide6.QtWidgets import (QWidget, QLabel, QLineEdit, QPushButton, 
                            QVBoxLayout, QHBoxLayout, QTextEdit, QFileDialog, QMessageBox, QFrame)
 from PySide6.QtGui import QFont, QIcon
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QEvent
 
 class PesquisaCPF(QWidget):
     def __init__(self, search_logic, clear_logic, update_logic):
@@ -14,6 +14,7 @@ class PesquisaCPF(QWidget):
         
         self.setWindowTitle('Retenção 5D')
         self.setGeometry(100, 100, 400, 320)
+        self.setFixedSize(400, 320)  # Torna a janela não redimensionável
         
         # Widgets existentes
         self.label_cpf = QLabel('Digite o CPF:')
@@ -33,10 +34,15 @@ class PesquisaCPF(QWidget):
         self.label_farm = QLabel('Desconto farmácia:')
         self.label_ultimos3 = QLabel('Últimos 3 meses')
         self.label_total = QLabel('Total')
-        self.label_farm3m = QTextEdit()
-        self.label_farm3m.setReadOnly(True)
-        self.label_total_valor = QTextEdit()
-        self.label_total_valor.setReadOnly(True)
+        
+        # Adicionar labels para mostrar os valores (em vez de QTextEdit)
+        self.label_farm3m = QLabel('')
+        self.label_farm3m.setStyleSheet("background-color: #ffffff; color: #333333; font-size: 14px; border-radius: 5px; min-width: 170px; min-height: 20px; padding: 2px;")
+        self.label_farm3m.setAlignment(Qt.AlignCenter)
+        
+        self.label_total_valor = QLabel('')
+        self.label_total_valor.setStyleSheet("background-color: #ffffff; color: #333333; font-size: 14px; border-radius: 5px; min-width: 170px; min-height: 20px; padding: 2px;")
+        self.label_total_valor.setAlignment(Qt.AlignCenter)
         
         # Botão de atualização (inicialmente oculto)
         self.button_update = QPushButton('Atualizar Base')
@@ -55,8 +61,6 @@ class PesquisaCPF(QWidget):
         self.label_farm.setStyleSheet("color: #ded953; font-size: 16px; font-weight: bold")
         self.label_ultimos3.setStyleSheet("color: #ffffff; font-size: 14px;")
         self.label_total.setStyleSheet("color: #ffffff; font-size: 14px;")
-        self.label_farm3m.setStyleSheet("background-color: #292929; color: #333333; font-size: 14px; border-radius: 10px; width: 170px; height:20px;")
-        self.label_total_valor.setStyleSheet("background-color: #292929; color: #333333; font-size: 14px; border-radius: 10px; width: 170px; height:20px;")
         
         # Layout principal
         layout = QVBoxLayout()
@@ -105,7 +109,7 @@ class PesquisaCPF(QWidget):
         self.label_total_valor.setText("")
 
     def eventFilter(self, obj, event):
-        if event.type() == event.KeyPress:
+        if event.type() == QEvent.Type.KeyPress:
             # Captura a tecla pressionada
             key = event.text().lower()
             
