@@ -1,6 +1,6 @@
 import pandas as pd
 import time
-from PySide6.QtWidgets import QApplication, QWidget, QVBoxLayout, QRadioButton, QPushButton, QDialog, QMessageBox
+from PySide6.QtWidgets import QApplication, QWidget, QVBoxLayout, QRadioButton, QPushButton, QDialog, QMessageBox, QLabel
 from PySide6.QtCore import Qt
 
 print("Carregando dados...")
@@ -13,7 +13,7 @@ except FileNotFoundError:
     print("Arquivo Parquet não encontrado.")
     df = pd.DataFrame()
 
-def search_logic(cpf, label_oferta, label_farm3m=None, label_total_valor=None, parent=None):
+def search_logic(cpf, label_oferta, label_farm3m=None, label_total_valor=None, parent=None, label_conta=None):
     global df
     
     if df.empty:
@@ -21,7 +21,7 @@ def search_logic(cpf, label_oferta, label_farm3m=None, label_total_valor=None, p
         label_oferta.setStyleSheet("background-color: #f8f8ff; border-radius: 10px; ")
         return
     
-    required_columns = ['cpf', 'fx_score', 'desc_farmacia_ult3m', 'desc_farmacia_total']
+    required_columns = ['cpf', 'fx_score', 'desc_farmacia_ult3m', 'desc_farmacia_total', 'numero_conta']
     for column in required_columns:
         if column not in df.columns:
             label_oferta.setText(f"Coluna {column.upper()} não foi encontrada!")
@@ -36,40 +36,30 @@ def search_logic(cpf, label_oferta, label_farm3m=None, label_total_valor=None, p
     
     mask = df['cpf'] == cpf
     if mask.any():
-        linha_cpf = df.loc[mask]
+        linha_cpf = df.loc[mask].copy()  # Usar .copy() para evitar o warning
         row_count = len(linha_cpf)
 
         if row_count == 1:
-            linha_cpf = df.loc[mask].iloc[0]
+            selected_row = linha_cpf.iloc[0]
         else:
-            account = linha_cpf['numero_conta']
-            account_list = account.tolist()
+            score_mapping = {
+                "3 - VERDE": 1,
+                "2 - AMARELO": 2,
+                "1 - VERMELHO": 3,
+                "4 - MORTO": 4,
+            }
             
-            selected_account = show_account_selection_dialog(account_list, parent)
-            if selected_account is None:
-                label_oferta.setText("Nenhuma conta selecionada.")
-                return
-            try:
+            linha_cpf['score_value'] = linha_cpf['fx_score'].map(score_mapping)
+            linha_cpf = linha_cpf.sort_values('score_value')
+            selected_row = linha_cpf.iloc[0] 
+            selected_message = f"\nA melhor conta encontrada é: {selected_row['numero_conta']}"
+            print(f"Múltiplas contas encontradas. Selecionada automaticamente a conta com melhor score: {selected_row['numero_conta']}")
 
-                if linha_cpf['numero_conta'].dtype.kind in 'iu': 
-                    selected_account = int(selected_account)
-            except (ValueError, TypeError):
-                pass 
-                
-
-            filtered = linha_cpf[linha_cpf['numero_conta'] == selected_account]
-            
-
-            if filtered.empty:
-                label_oferta.setText("Conta selecionada não encontrada.")
-                label_oferta.setStyleSheet("background-color: #f8f8ff; border-radius: 10px; ")
-                return
-                
-            linha_cpf = filtered.iloc[0]
-
-        fx_score = linha_cpf['fx_score']
-        desc_farm_3m = linha_cpf['desc_farmacia_ult3m']
-        desc_farm_total = linha_cpf['desc_farmacia_total']        
+        # Extrair os valores da linha selecionada
+        fx_score = selected_row['fx_score']
+        desc_farm_3m = selected_row['desc_farmacia_ult3m']
+        desc_farm_total = selected_row['desc_farmacia_total']
+        numero_conta = selected_row['numero_conta']
 
         offer_messages = {
             "4 - MORTO": ("VERMELHO 25%", "#FF2A00"),
@@ -79,7 +69,10 @@ def search_logic(cpf, label_oferta, label_farm3m=None, label_total_valor=None, p
         }
 
         message, color = offer_messages.get(fx_score, ("Oferta não localizada.", "#f8f8ff"))
-        label_oferta.setText(message)
+        if row_count == 1:
+            label_oferta.setText(message)
+        else:
+            label_oferta.setText(message + selected_message)
         label_oferta.setStyleSheet(f"background-color: {color}; border-radius: 10px; ")
 
         if label_farm3m is not None:
@@ -89,6 +82,10 @@ def search_logic(cpf, label_oferta, label_farm3m=None, label_total_valor=None, p
         if label_total_valor is not None:
             valor_formatado_total = f"R$ {desc_farm_total:.2f}".replace('.', ',')
             label_total_valor.setText(valor_formatado_total)
+            
+        # Exibir o número da conta se o label for fornecido
+        if label_conta is not None:
+            label_conta.setText(f"Conta: {numero_conta}")
     else:
         label_oferta.setText("Cliente não localizado!")
         label_oferta.setStyleSheet("background-color: #f8f8ff; border-radius: 10px; ")
@@ -97,63 +94,10 @@ def search_logic(cpf, label_oferta, label_farm3m=None, label_total_valor=None, p
             label_farm3m.setText("R$ 0,00")
         if label_total_valor is not None:
             label_total_valor.setText("R$ 0,00")
+        if label_conta is not None:
+            label_conta.setText("Conta: --")
 
-
-def show_account_selection_dialog(account_list, parent=None):
-    dialog = QDialog(parent)
-    dialog.setWindowTitle("Selecione a Conta")
-    dialog.setWindowModality(Qt.WindowModal) 
-    
-    dialog.setStyleSheet("QDialog { background-color: #292929; }"
-                         "QLabel { color: white; }"
-                         "QRadioButton { color: white; }")
-    
-    layout = QVBoxLayout()
-
-    radio_buttons = []
-    selected_account = None
-
-
-    if account_list:
-        for i, n in enumerate(account_list):
-            radio_button = QRadioButton(str(n))
-            if i == 0:
-                radio_button.setChecked(True)
-            radio_buttons.append(radio_button)
-            layout.addWidget(radio_button)
-
-    confirm_button = QPushButton("Confirmar")
-    confirm_button.setStyleSheet("QPushButton { color: white; background-color: #3a3a3a; border: 1px solid #555; border-radius: 3px; padding: 5px; }"
-                                "QPushButton:hover { background-color: #4a4a4a; }"
-                                "QPushButton:pressed { background-color: #555; }")
-    
-    def on_confirm():
-        nonlocal selected_account
-        for radio_button in radio_buttons:
-            if radio_button.isChecked():
-                selected_account = radio_button.text()
-                dialog.accept()
-                break
-        if selected_account is None and radio_buttons:
-            selected_account = radio_buttons[0].text()
-            dialog.accept()
-
-    confirm_button.clicked.connect(on_confirm)
-    layout.addWidget(confirm_button)
-
-    dialog.setLayout(layout)
-    
-
-    if parent:
-        dialog.move(parent.frameGeometry().center() - dialog.rect().center())
-
-
-    dialog.exec()
-
-    return selected_account
-
-
-def clear_logic(input_cpf, label_oferta, label_farm3m=None, label_total_valor=None):
+def clear_logic(input_cpf, label_oferta, label_farm3m=None, label_total_valor=None, label_conta=None):
     input_cpf.setText("")
     label_oferta.setText(" ")
     label_oferta.setStyleSheet("background-color: #292929; border-radius: 10px; ")
@@ -162,15 +106,15 @@ def clear_logic(input_cpf, label_oferta, label_farm3m=None, label_total_valor=No
         label_farm3m.setText("R$ 0,00")
     if label_total_valor is not None:
         label_total_valor.setText("R$ 0,00")
-
+    if label_conta is not None:
+        label_conta.setText("Conta: --")
 
 def update_logic(file_path):
     global df
     try:
         new_df = pd.read_excel(file_path)
         
-
-        required_columns = ['cpf', 'fx_score', 'desc_farmacia_ult3m', 'desc_farmacia_total']
+        required_columns = ['cpf', 'fx_score', 'desc_farmacia_ult3m', 'desc_farmacia_total', 'numero_conta']
         for column in required_columns:
             if column not in new_df.columns:
                 print(f"Coluna {column} não encontrada no arquivo!")
