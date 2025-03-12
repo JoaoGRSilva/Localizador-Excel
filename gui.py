@@ -14,7 +14,7 @@ class PesquisaCPF(QWidget):
         
         self.setWindowTitle('Retenção 5D')
         self.setGeometry(100, 100, 400, 320)
-        self.setFixedSize(400, 320)
+        self.setFixedSize(400, 250)
         
         # Widgets existentes
         self.label_cpf = QLabel('Digite o CPF:')
@@ -55,7 +55,7 @@ class PesquisaCPF(QWidget):
         self.input_cpf.setStyleSheet("background-color: #ffffff; color: #333333; font-size: 14px; border-radius: 5px; width: 360px; height:20px;")
         self.button_pesquisar.setStyleSheet("background-color: #00C6CC; color: #ffffff; font-size: 14px; border-radius: 5px; padding: 5px 10px; width: 170px; height:20px;")
         self.button_limpar.setStyleSheet("background-color: #D3FF00; color: #333333; font-size: 14px; border-radius: 5px; padding: 5px 10px;")
-        self.label_oferta.setStyleSheet("background-color: #292929; color: #333333; font-size: 14px; border-radius: 10px; width: 360px; height: 40px;")
+        self.label_oferta.setStyleSheet("background-color: #292929; color: #333333; font-size: 14px; border-radius: 10px; width: 360px; height: 20px;")
         
         # Estilos para os elementos de desconto farmácia
         self.label_farm.setStyleSheet("color: #ded953; font-size: 16px; font-weight: bold")

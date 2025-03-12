@@ -72,10 +72,10 @@ def search_logic(cpf, label_oferta, label_farm3m=None, label_total_valor=None, p
         desc_farm_total = linha_cpf['desc_farmacia_total']        
 
         offer_messages = {
-            "4 - MORTO": ("VERMELHO 25%", "#ff6961"),
-            "1 - VERMELHO": ("VERMELHO 25%", "#ff6961"),
-            "2 - AMARELO": ("AMARELO 50% A 75%", "#faf7a9"),
-            "3 - VERDE": ("VERDE 75% A 100%", "#cfe0bc"),
+            "4 - MORTO": ("VERMELHO 25%", "#FF2A00"),
+            "1 - VERMELHO": ("VERMELHO 25%", "#FF2A00"),
+            "2 - AMARELO": ("AMARELO 50% A 75%", "#FFEB3B"),
+            "3 - VERDE": ("VERDE 75% A 100%", "#28A745"),
         }
 
         message, color = offer_messages.get(fx_score, ("Oferta não localizada.", "#f8f8ff"))
