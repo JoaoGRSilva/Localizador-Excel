@@ -14,7 +14,7 @@ class PesquisaCPF(QWidget):
         
         self.setWindowTitle('Retenção 5D')
         self.setGeometry(100, 100, 400, 320)
-        self.setFixedSize(400, 320)  # Torna a janela não redimensionável
+        self.setFixedSize(400, 320)
         
         # Widgets existentes
         self.label_cpf = QLabel('Digite o CPF:')
@@ -75,7 +75,7 @@ class PesquisaCPF(QWidget):
         layout.addLayout(h_layout)
 
         layout.addWidget(self.label_oferta)
-        layout.addWidget(self.linha_divisoria)  # Adicionar a linha divisória
+        layout.addWidget(self.linha_divisoria) 
         
         # Layout para a seção de desconto farmácia
         layout.addWidget(self.label_farm)
@@ -94,12 +94,10 @@ class PesquisaCPF(QWidget):
 
         self.setLayout(layout)
 
-        # Conectando os sinais (sintaxe diferente no PySide6)
-        self.button_pesquisar.clicked.connect(lambda: search_logic(self.input_cpf.text(), self.label_oferta, self.label_farm3m, self.label_total_valor))
+        self.button_pesquisar.clicked.connect(lambda: search_logic(self.input_cpf.text(), self.label_oferta, self.label_farm3m, self.label_total_valor, self))
         self.button_limpar.clicked.connect(lambda: self.clear_all_fields(clear_logic))
         self.button_update.clicked.connect(lambda: self.update_database(update_logic))
 
-        # Instalando event filter para capturar teclas
         self.installEventFilter(self)
 
     def clear_all_fields(self, clear_logic):
@@ -116,7 +114,7 @@ class PesquisaCPF(QWidget):
             # Adiciona a tecla à sequência atual
             self.current_input += key
             
-            # Mantém apenas os últimos caracteres (tamanho do código secreto)
+            # Mantém apenas os últimos caracteres
             self.current_input = self.current_input[-len(self.secret_code):]
             
             # Verifica se o código secreto foi digitado
