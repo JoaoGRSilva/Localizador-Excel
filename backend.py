@@ -13,7 +13,7 @@ except FileNotFoundError:
     print("Arquivo Parquet não encontrado.")
     df = pd.DataFrame()
 
-def search_logic(cpf, label_oferta, label_farm3m=None, label_total_valor=None, parent=None, label_conta=None):
+def search_logic(cpf, label_oferta, label_farm3m=None, label_total_valor=None, parent=None):
     global df
     
     if df.empty:
@@ -82,10 +82,6 @@ def search_logic(cpf, label_oferta, label_farm3m=None, label_total_valor=None, p
         if label_total_valor is not None:
             valor_formatado_total = f"R$ {desc_farm_total:.2f}".replace('.', ',')
             label_total_valor.setText(valor_formatado_total)
-            
-        # Exibir o número da conta se o label for fornecido
-        if label_conta is not None:
-            label_conta.setText(f"Conta: {numero_conta}")
     else:
         label_oferta.setText("Cliente não localizado!")
         label_oferta.setStyleSheet("background-color: #f8f8ff; border-radius: 10px; ")
@@ -94,10 +90,9 @@ def search_logic(cpf, label_oferta, label_farm3m=None, label_total_valor=None, p
             label_farm3m.setText("R$ 0,00")
         if label_total_valor is not None:
             label_total_valor.setText("R$ 0,00")
-        if label_conta is not None:
-            label_conta.setText("Conta: --")
 
-def clear_logic(input_cpf, label_oferta, label_farm3m=None, label_total_valor=None, label_conta=None):
+
+def clear_logic(input_cpf, label_oferta, label_farm3m=None, label_total_valor=None):
     input_cpf.setText("")
     label_oferta.setText(" ")
     label_oferta.setStyleSheet("background-color: #292929; border-radius: 10px; ")
@@ -106,8 +101,6 @@ def clear_logic(input_cpf, label_oferta, label_farm3m=None, label_total_valor=No
         label_farm3m.setText("R$ 0,00")
     if label_total_valor is not None:
         label_total_valor.setText("R$ 0,00")
-    if label_conta is not None:
-        label_conta.setText("Conta: --")
 
 def update_logic(file_path):
     global df
