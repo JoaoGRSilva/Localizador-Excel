@@ -2,7 +2,7 @@
 
 **Retenção 5D** é um aplicativo desenvolvido para realizar pesquisas de CPF e fornecer ofertas personalizadas com base no `fx_score` do cliente. Além disso, o app agora inclui funcionalidades aprimoradas para **atualizar a base de dados** diretamente dentro da aplicação e **carregar os dados de maneira otimizada**, proporcionando uma experiência mais rápida e eficiente.
 
-## 🆕 **Novidades na versão 2.0**
+## 🆕 **Novidades**
 ### **Funcionalidades adicionadas:**
 1. **Atualização de Banco de Dados dentro do App**:
    - Agora você pode **atualizar o banco de dados** diretamente no aplicativo, sem necessidade de conversão manual do arquivo.
@@ -20,53 +20,12 @@
 4. **Aparência Melhorada**:
    - A interface foi aprimorada com cores mais modernas e agradáveis.
    - O botão de atualização é agora ativado por um código secreto, aumentando a segurança e controle no uso.
-
----
-
-## 📥 **Instalação**
-
-### **Requisitos**
-- Python 3.6+
-- Dependências:
-  - PyQt5
-  - Pandas
-  - Openpyxl
-
-### **Instalação das dependências**
-1. Clone o repositório:
-   ```bash
-   git clone https://github.com/JoaoGRSilva/Localizador-Excel.git
-Navegue até a pasta do projeto:
-
-bash
-Copiar código
-cd repositorio
-Instale as dependências:
-
-bash
-Copiar código
-pip install -r requirements.txt
-Se preferir, crie um ambiente virtual:
-
-bash
-Copiar código
-python -m venv venv
-source venv/bin/activate  # no Linux/macOS
-venv\Scripts\activate     # no Windows
-🖥 Como usar
-Executando o Aplicativo:
-
-Para executar o aplicativo, basta rodar o arquivo main.py:
-bash
-Copiar código
-python main.py
-Pesquisa de CPF:
-
-Digite um CPF válido na caixa de texto e clique em "Pesquisar" para encontrar as ofertas associadas a esse CPF.
-Atualização de Banco de Dados:
-
-O botão "Atualizar Base" estará oculto até que o código secreto seja digitado.
-Após desbloquear o botão, selecione o arquivo Excel com os dados atualizados e o banco de dados será automaticamente convertido para o formato Parquet.
+  
+5. **Desconto farmácia**:
+   - Agora é exibido a utilização Total e dos últimos 3 meses do cliente
+  
+6. **Intigência Aprimorada**:
+   - Caso o cliente tenha mais de duas contas, sempre será exibido a melhor conta do clinte
 
 ---
 
@@ -76,7 +35,7 @@ Após desbloquear o botão, selecione o arquivo Excel com os dados atualizados e
 ---
 
 ### 🚀 Tecnologias Utilizadas
-PyQt5: Para a interface gráfica do usuário (GUI).
+PySide6: Para a interface gráfica do usuário (GUI).
 Pandas: Para manipulação de dados e leitura/escrita do arquivo Parquet.
 Excel (XLSX): Formato de arquivo usado para importar dados atualizados.
 
@@ -89,12 +48,6 @@ Excel (XLSX): Formato de arquivo usado para importar dados atualizados.
 
 ### 🤝 Contribuindo
 - Contribuições são bem-vindas! Se você tiver melhorias, correções de bugs ou novas funcionalidades, sinta-se à vontade para abrir uma issue ou enviar um pull request.
-
-Faça um fork deste repositório.
-Crie uma nova branch (git checkout -b feature-nome-da-sua-feature).
-Faça as alterações necessárias e commit com uma mensagem clara (git commit -am 'Adicionando nova funcionalidade').
-Push para sua branch (git push origin feature-nome-da-sua-feature).
-Abra um pull request explicando as mudanças realizadas.
 
 ---
 
