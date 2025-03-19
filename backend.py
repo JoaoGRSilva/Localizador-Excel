@@ -8,6 +8,7 @@ start_time = time.time()
 try:
     df = pd.read_parquet('dados.parquet')
     load_time = time.time() - start_time
+    print(df)
     print(f"Dados carregados em {load_time:.2f} segundos!")
 except FileNotFoundError:
     print("Arquivo Parquet não encontrado.")
@@ -21,7 +22,7 @@ def search_logic(cpf, label_oferta, label_farm3m=None, label_total_valor=None, p
         label_oferta.setStyleSheet("background-color: #f8f8ff; border-radius: 10px; ")
         return
     
-    required_columns = ['cpf', 'fx_score', 'desc_farmacia_ult3m', 'desc_farmacia_total', 'numero_conta']
+    required_columns = ['cpf', 'fx_semaforo', 'desc_farmacia_ult3m', 'desc_farmacia_total', 'numero_conta']
     for column in required_columns:
         if column not in df.columns:
             label_oferta.setText(f"Coluna {column.upper()} não foi encontrada!")
@@ -34,10 +35,20 @@ def search_logic(cpf, label_oferta, label_farm3m=None, label_total_valor=None, p
         label_oferta.setStyleSheet("background-color: #f8f8ff; border-radius: 10px; ")
         return
     
+    cpf = ''.join(filter(str.isdigit, str(cpf)))
+    if len(cpf) < 11:
+        cpf = cpf.zfill(11)
+
+    print(cpf, type(cpf))
+
     mask = df['cpf'] == cpf
+
+    print(mask)
+
     if mask.any():
-        linha_cpf = df.loc[mask].copy()  # Usar .copy() para evitar o warning
+        linha_cpf = df.loc[mask].copy()
         row_count = len(linha_cpf)
+        print(linha_cpf)
 
         if row_count == 1:
             selected_row = linha_cpf.iloc[0]
@@ -49,14 +60,14 @@ def search_logic(cpf, label_oferta, label_farm3m=None, label_total_valor=None, p
                 "4 - MORTO": 4,
             }
             
-            linha_cpf['score_value'] = linha_cpf['fx_score'].map(score_mapping)
+            linha_cpf['score_value'] = linha_cpf['fx_semaforo'].map(score_mapping)
             linha_cpf = linha_cpf.sort_values('score_value')
             selected_row = linha_cpf.iloc[0] 
             selected_message = f"\nA melhor conta encontrada é: {selected_row['numero_conta']}"
             print(f"Múltiplas contas encontradas. Selecionada automaticamente a conta com melhor score: {selected_row['numero_conta']}")
 
         # Extrair os valores da linha selecionada
-        fx_score = selected_row['fx_score']
+        fx_score = selected_row['fx_semaforo']
         desc_farm_3m = selected_row['desc_farmacia_ult3m']
         desc_farm_total = selected_row['desc_farmacia_total']
         numero_conta = selected_row['numero_conta']
