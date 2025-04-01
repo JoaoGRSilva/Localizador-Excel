@@ -1,15 +1,14 @@
+#gui.py
 from PySide6.QtWidgets import (QWidget, QLabel, QLineEdit, QPushButton, 
                            QVBoxLayout, QHBoxLayout, QTextEdit, QFileDialog, QMessageBox, QFrame)
 from PySide6.QtGui import QFont, QIcon
 from PySide6.QtCore import Qt, QEvent
+from model import DataModel
 
 class PesquisaCPF(QWidget):
-    def __init__(self, search_logic, clear_logic, update_logic):
+    def __init__(self, search_logic):
         super().__init__()
-
-        self.secret_code = "att5d"  # Código secreto para ativar o botão
-        self.current_input = ""  # Armazena as teclas digitadas
-        
+       
         self.setWindowIcon(QIcon("icon.ico"))
         
         self.setWindowTitle('Retenção 5D')
@@ -35,7 +34,6 @@ class PesquisaCPF(QWidget):
         self.label_ultimos3 = QLabel('Últimos 3 meses')
         self.label_total = QLabel('Total')
         
-        # Adicionar labels para mostrar os valores (em vez de QTextEdit)
         self.label_farm3m = QLabel('')
         self.label_farm3m.setStyleSheet("background-color: #ffffff; color: #333333; font-size: 14px; border-radius: 5px; min-width: 170px; min-height: 20px; padding: 2px;")
         self.label_farm3m.setAlignment(Qt.AlignCenter)
@@ -43,11 +41,6 @@ class PesquisaCPF(QWidget):
         self.label_total_valor = QLabel('')
         self.label_total_valor.setStyleSheet("background-color: #ffffff; color: #333333; font-size: 14px; border-radius: 5px; min-width: 170px; min-height: 20px; padding: 2px;")
         self.label_total_valor.setAlignment(Qt.AlignCenter)
-        
-        # Botão de atualização (inicialmente oculto)
-        self.button_update = QPushButton('Atualizar Base')
-        self.button_update.setStyleSheet("background-color: #4CAF50; color: #ffffff; font-size: 14px; border-radius: 5px; padding: 5px 10px;")
-        self.button_update.hide()  # Inicialmente oculto
 
         # Estilos existentes
         self.setStyleSheet("background-color: #292929;")
@@ -71,7 +64,6 @@ class PesquisaCPF(QWidget):
         h_layout = QHBoxLayout()
         h_layout.addWidget(self.button_pesquisar)
         h_layout.addWidget(self.button_limpar)
-        h_layout.addWidget(self.button_update)
         layout.addLayout(h_layout)
 
         layout.addWidget(self.label_oferta)
@@ -94,45 +86,7 @@ class PesquisaCPF(QWidget):
 
         self.setLayout(layout)
 
-        self.button_pesquisar.clicked.connect(lambda: search_logic(self.input_cpf.text(), self.label_oferta, self.label_farm3m, self.label_total_valor, self))
-        self.button_limpar.clicked.connect(lambda: self.clear_all_fields(clear_logic))
-        self.button_update.clicked.connect(lambda: self.update_database(update_logic))
+        self.button_pesquisar.clicked.connect(DataModel.logica_pesquisa(self.input_cpf.txt()))
+        self.button_limpar.clicked.connect(DataModel.clear_fields())
 
         self.installEventFilter(self)
-
-    def clear_all_fields(self, clear_logic):
-        # Limpa todos os campos
-        clear_logic(self.input_cpf, self.label_oferta)
-        self.label_farm3m.setText("")
-        self.label_total_valor.setText("")
-
-    def eventFilter(self, obj, event):
-        if event.type() == QEvent.Type.KeyPress:
-            # Captura a tecla pressionada
-            key = event.text().lower()
-            
-            # Adiciona a tecla à sequência atual
-            self.current_input += key
-            
-            # Mantém apenas os últimos caracteres
-            self.current_input = self.current_input[-len(self.secret_code):]
-            
-            # Verifica se o código secreto foi digitado
-            if self.current_input == self.secret_code:
-                self.button_update.show()
-                self.current_input = ""  # Limpa a sequência
-            
-        return super().eventFilter(obj, event)
-
-    def update_database(self, update_logic):
-        try:
-            file_name, _ = QFileDialog.getOpenFileName(self, "Selecionar arquivo Excel", "", "Excel Files (*.xlsx *.xls)")
-            if file_name:
-                success = update_logic(file_name)
-                if success:
-                    QMessageBox.information(self, "Sucesso", "Base de dados atualizada com sucesso!")
-                    self.button_update.hide()  # Esconde o botão após atualização
-                else:
-                    QMessageBox.warning(self, "Erro", "Erro ao atualizar a base de dados.")
-        except Exception as e:
-            QMessageBox.critical(self, "Erro", f"Erro ao atualizar: {str(e)}")
