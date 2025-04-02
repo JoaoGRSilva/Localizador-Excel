@@ -3,11 +3,12 @@ from PySide6.QtWidgets import (QWidget, QLabel, QLineEdit, QPushButton,
                            QVBoxLayout, QHBoxLayout, QTextEdit, QFileDialog, QMessageBox, QFrame)
 from PySide6.QtGui import QFont, QIcon
 from PySide6.QtCore import Qt, QEvent
-from model import DataModel
 
 class PesquisaCPF(QWidget):
-    def __init__(self, search_logic):
+    def __init__(self, data_model):
         super().__init__()
+
+        self.data_model = data_model
        
         self.setWindowIcon(QIcon("icon.ico"))
         
@@ -86,7 +87,22 @@ class PesquisaCPF(QWidget):
 
         self.setLayout(layout)
 
-        self.button_pesquisar.clicked.connect(DataModel.logica_pesquisa(self.input_cpf.txt()))
-        self.button_limpar.clicked.connect(DataModel.clear_fields())
+        self.button_pesquisar.clicked.connect(self.pesquisar)
+        self.button_limpar.clicked.connect(self.limpar)
 
-        self.installEventFilter(self)
+    def pesquisar(self):
+        cpf = self.input_cpf.text()
+        self.data_model.logica_pesquisa(
+            cpf, 
+            self.label_oferta, 
+            self.label_farm3m, 
+            self.label_total_valor
+        )
+
+    def limpar(self):
+        self.data_model.clear_fields(
+            self.input_cpf, 
+            self.label_oferta, 
+            self.label_farm3m, 
+            self.label_total_valor
+        )
