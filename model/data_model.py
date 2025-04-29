@@ -15,6 +15,7 @@ class DataModel:
         try:
             self.df = pd.read_parquet('dados.parquet')
             print("Dados carregados com sucesso!")
+            print(self.df.columns)
             print(self.df.head())
             return self.df
         
