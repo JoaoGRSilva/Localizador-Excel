@@ -4,27 +4,23 @@
 
 ## 🆕 **Novidades**
 ### **Funcionalidades adicionadas:**
-1. **Atualização de Banco de Dados dentro do App**:
-   - Agora você pode **atualizar o banco de dados** diretamente no aplicativo, sem necessidade de conversão manual do arquivo.
-   - Basta clicar no botão **"Atualizar Base"**, fornecer um arquivo Excel atualizado, e o banco de dados será automaticamente convertido para o formato Parquet.
-   - Para garantir maior segurança, o botão de atualização fica oculto até que um código secreto seja inserido.
 
-2. **Otimização na Abertura do Aplicativo**:
+1. **Otimização na Abertura do Aplicativo**:
    - O tempo de carregamento foi otimizado, tornando a abertura do aplicativo muito mais rápida.
    - A busca de CPF e o carregamento dos dados agora são mais eficientes, proporcionando uma experiência melhor para o usuário.
 
-3. **Melhoria na Lógica de Busca de CPF**:
+2. **Melhoria na Lógica de Busca de CPF**:
    - A busca foi otimizada para garantir **respostas mais rápidas** e **confiáveis**.
    - Caso o CPF não seja encontrado ou se o banco de dados não estiver carregado corretamente, a interface agora fornece mensagens claras de erro.
 
-4. **Aparência Melhorada**:
+3. **Aparência Melhorada**:
    - A interface foi aprimorada com cores mais modernas e agradáveis.
    - O botão de atualização é agora ativado por um código secreto, aumentando a segurança e controle no uso.
   
-5. **Desconto farmácia**:
+4. **Desconto farmácia**:
    - Agora é exibido a utilização Total e dos últimos 3 meses do cliente
   
-6. **Intigência Aprimorada**:
+5. **Intigência Aprimorada**:
    - Caso o cliente tenha mais de duas contas, sempre será exibido a melhor conta do clinte
 
 ---
