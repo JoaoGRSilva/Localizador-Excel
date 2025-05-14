@@ -1,1 +1,1 @@
-from .pesquisa_view import PesquisaCPF
+from .GUI import PesquisaCPF

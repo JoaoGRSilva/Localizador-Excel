@@ -1,8 +1,7 @@
-#gui.py
 from PySide6.QtWidgets import (QWidget, QLabel, QLineEdit, QPushButton, 
-                           QVBoxLayout, QHBoxLayout, QTextEdit, QFileDialog, QMessageBox, QFrame)
-from PySide6.QtGui import QFont, QIcon
-from PySide6.QtCore import Qt, QEvent
+                           QVBoxLayout, QHBoxLayout, QTextEdit, QFrame)
+from PySide6.QtGui import QIcon
+from PySide6.QtCore import Qt
 
 class PesquisaCPF(QWidget):
     def __init__(self, data_model):
